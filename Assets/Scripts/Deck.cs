@@ -27,6 +27,8 @@ public class Deck : MonoBehaviour
         StartGame();        
     }
 
+    //comentario de prueba
+
     private void InitCardValues()
     {
         /*TODO:
