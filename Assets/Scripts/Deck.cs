@@ -27,8 +27,6 @@ public class Deck : MonoBehaviour
         StartGame();        
     }
 
-    //comentario de prueba
-
     private void InitCardValues()
     {
         /*TODO:
@@ -36,6 +34,29 @@ public class Deck : MonoBehaviour
          * En principio, la posición de cada valor se deberá corresponder con la posición de faces. 
          * Por ejemplo, si en faces[1] hay un 2 de corazones, en values[1] debería haber un 2.
          */
+
+        int cardIndex = 0;
+        for (int i = 0; i < 4; i++) //4 palos: corazones, diamantes, picas, tréboles
+        {
+            for (int j = 1; j <= 13; j++) //13 cartas por palo
+            {
+                values[cardIndex] = j <= 10 ? j : 10; //Asigna el valor de la carta (1-10) o 10 para las figuras
+
+                if (j == 1)
+                {
+                    values[cardIndex] = 11;
+                }
+                else if (j <= 10)
+                {
+                    values[cardIndex] = j;
+                }
+                else
+                {
+                    values[cardIndex] = 10;
+                }
+                cardIndex++;
+            }
+        }
     }
 
     private void ShuffleCards()
