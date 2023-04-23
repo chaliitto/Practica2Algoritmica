@@ -11,6 +11,7 @@ public class Deck : MonoBehaviour
     public Button playAgainButton;
     public Text finalMessage;
     public Text probMessage;
+    public Text Puntos;
 
     public int[] values = new int[52];
     int cardIndex = 0;
@@ -129,10 +130,18 @@ public class Deck : MonoBehaviour
 
         //Repartimos carta al jugador
         PushPlayer();
+        Puntos.text = "Puntos: " + player.GetComponent<CardHand>().points;
 
         /*TODO:
          * Comprobamos si el jugador ya ha perdido y mostramos mensaje
          */
+
+        if (player.GetComponent<CardHand>().points > 21)
+        {
+            finalMessage.text = "HAS PERDIDO";
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+        }
 
     }
 
