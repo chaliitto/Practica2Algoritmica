@@ -85,12 +85,20 @@ public class Deck : MonoBehaviour
     void StartGame()
     {
         for (int i = 0; i < 2; i++)
-        {
+        { 
             PushPlayer();
             PushDealer();
+            Puntos.text = player.GetComponent<CardHand>().points.ToString();
+            MensajePuntosDealer.text = "";
+
             /*TODO:
              * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
              */
+
+            if (player.GetComponent<CardHand>().points == 21 || dealer.GetComponent<CardHand>().points == 21)
+            {
+                Stand();
+            }
         }
     }
 
@@ -131,7 +139,7 @@ public class Deck : MonoBehaviour
 
         //Repartimos carta al jugador
         PushPlayer();
-        Puntos.text = "Puntos: " + player.GetComponent<CardHand>().points;
+        Puntos.text = player.GetComponent<CardHand>().points.ToString();
 
         /*TODO:
          * Comprobamos si el jugador ya ha perdido y mostramos mensaje
@@ -139,7 +147,7 @@ public class Deck : MonoBehaviour
 
         if (player.GetComponent<CardHand>().points > 21)
         {
-            finalMessage.text = "HAS PERDIDO";
+            finalMessage.text = "Te has pasado de puntos, HAS PERDIDO :(";
             hitButton.interactable = false;
             stickButton.interactable = false;
         }
@@ -169,27 +177,27 @@ public class Deck : MonoBehaviour
 
         int PuntosDealer = dealer.GetComponent<CardHand>().points;
         int PuntosJuagador = player.GetComponent<CardHand>().points;
-        MensajePuntosDealer.text = "Dealer: " + PuntosDealer + " puntos";
+        MensajePuntosDealer.text = PuntosDealer.ToString();
 
         if (PuntosDealer == 21)
         {
-            finalMessage.text = "El dealer hizo BlackJack. Has perdido";
+            finalMessage.text = "BLACKJACK DEL DEALER, HAS PERDIDO :(";
         }
         else if (PuntosJuagador == 21)
         {
-            finalMessage.text = "Enhorabuena, has hecho BlackJack. Has ganado";
+            finalMessage.text = "BLACKJACK, HAS GANADO!!!";
         }
         else if (PuntosDealer > 21)
         {
-            finalMessage.text = "La banca se ha pasado, has ganado";
+            finalMessage.text = "El dealer se ha pasado de puntos, HAS GANADO!!!";
         }
         else if (PuntosDealer == PuntosJuagador)
         {
-            finalMessage.text = "Habeis tenido un empate";
+            finalMessage.text = "EMPATE :|";
         }
         else
         {
-            finalMessage.text = "La banca te ha superado, has perdido";
+            finalMessage.text = "Has hecho menos puntos que la banca, HAS PERDIDO :(";
         }
 
 
@@ -200,6 +208,8 @@ public class Deck : MonoBehaviour
         hitButton.interactable = true;
         stickButton.interactable = true;
         finalMessage.text = "";
+        Puntos.text = "";
+        MensajePuntosDealer.text = "";
         player.GetComponent<CardHand>().Clear();
         dealer.GetComponent<CardHand>().Clear();
         cardIndex = 0;
