@@ -12,6 +12,7 @@ public class Deck : MonoBehaviour
     public Text finalMessage;
     public Text probMessage;
     public Text Puntos;
+    public Text MensajePuntosDealer;
 
     public int[] values = new int[52];
     int cardIndex = 0;
@@ -151,11 +152,46 @@ public class Deck : MonoBehaviour
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
 
+        dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+        hitButton.interactable = false;
+        stickButton.interactable = false;
+
         /*TODO:
          * Repartimos cartas al dealer si tiene 16 puntos o menos
          * El dealer se planta al obtener 17 puntos o más
          * Mostramos el mensaje del que ha ganado
          */
+
+        while (dealer.GetComponent<CardHand>().points < 17)
+        {
+            PushDealer();
+        }
+
+        int PuntosDealer = dealer.GetComponent<CardHand>().points;
+        int PuntosJuagador = player.GetComponent<CardHand>().points;
+        MensajePuntosDealer.text = "Dealer: " + PuntosDealer + " puntos";
+
+        if (PuntosDealer == 21)
+        {
+            finalMessage.text = "El dealer hizo BlackJack. Has perdido";
+        }
+        else if (PuntosJuagador == 21)
+        {
+            finalMessage.text = "Enhorabuena, has hecho BlackJack. Has ganado";
+        }
+        else if (PuntosDealer > 21)
+        {
+            finalMessage.text = "La banca se ha pasado, has ganado";
+        }
+        else if (PuntosDealer == PuntosJuagador)
+        {
+            finalMessage.text = "Habeis tenido un empate";
+        }
+        else
+        {
+            finalMessage.text = "La banca te ha superado, has perdido";
+        }
+
 
     }
 
