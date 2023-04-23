@@ -10,7 +10,9 @@ public class Deck : MonoBehaviour
     public Button stickButton;
     public Button playAgainButton;
     public Text finalMessage;
-    public Text probMessage;
+    public Text probDealermasJugador;
+    public Text prob1721;
+    public Text probmayor21;
     public Text Puntos;
     public Text MensajePuntosDealer;
 
@@ -104,12 +106,53 @@ public class Deck : MonoBehaviour
 
     private void CalculateProbabilities()
     {
-        /*TODO:
-         * Calcular las probabilidades de:
-         * - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
-         * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
-         * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
-         */
+        int PuntosJugador = player.GetComponent<CardHand>().points;
+
+        //Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
+
+
+        // - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+
+        int si = 0;
+        int no= 0;
+
+        for (int i = cardIndex; i < values.Length; i++)
+        {
+            if (PuntosJugador + values[i] >= 17 && PuntosJugador + values[i] <= 21)
+            {
+                si++;
+            }
+            else
+            {
+                no++;
+            }
+        }
+        int cartasTotales = si + no;
+        double probabilidad = ((double)si * 100) / (double)cartasTotales;
+        prob1721.text = probabilidad.ToString("F2") + "%";
+
+
+        //- Probabilidad de que el jugador obtenga más de 21 si pide una carta
+        //Teniendo en cuenta la los puntos del jugador, probamos a sumarle los valores de cada carta de la baraja. 
+        // Luego vemos cual de los resultados se pasa de 21, y con ello calculamos el porcentaje
+
+        int si2 = 0;
+        int no2 = 0;
+
+        for (int i = cardIndex; i < values.Length; i++)
+        {
+            if (PuntosJugador + values[i] > 21)
+            {
+                si2++;
+            }
+            else
+            {
+                no2++;
+            }
+        }
+        int cartasTotales2 = si2 + no2;
+        double probabilidad2 = ((double)si2 * 100) / (double)cartasTotales2;
+        probmayor21.text = probabilidad2.ToString("F2") + "%";
     }
 
     void PushDealer()
@@ -119,6 +162,7 @@ public class Deck : MonoBehaviour
          */
         dealer.GetComponent<CardHand>().Push(faces[cardIndex], values[cardIndex]);
         cardIndex++;
+        CalculateProbabilities();
     }
 
     void PushPlayer()
@@ -194,6 +238,10 @@ public class Deck : MonoBehaviour
         else if (PuntosDealer == PuntosJuagador)
         {
             finalMessage.text = "EMPATE :|";
+        } 
+        else if(PuntosDealer <= PuntosJuagador)
+        {
+            finalMessage.text = "Has hecho mas puntos que la banca, HAS GANADO!!!";
         }
         else
         {
