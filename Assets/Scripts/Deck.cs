@@ -52,7 +52,6 @@ public class Deck : MonoBehaviour
         {
             for (int j = 1; j <= 13; j++) //13 cartas por palo
             {
-                values[cardIndex] = j <= 10 ? j : 10; //Asigna el valor de la carta (1-10) o 10 para las figuras
 
                 if (j == 1)
                 {
@@ -120,6 +119,7 @@ public class Deck : MonoBehaviour
                     Stand();
                 }
                 Miscreditos.text = creditos + " creditos";
+
             }
         }
         else
@@ -144,7 +144,7 @@ public class Deck : MonoBehaviour
         // - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
 
         int si = 0;
-        int no= 0;
+        int no = 0;
 
         for (int i = cardIndex; i < values.Length; i++)
         {
@@ -172,7 +172,7 @@ public class Deck : MonoBehaviour
         for (int i = cardIndex; i < values.Length; i++)
         {
             if (PuntosJugador + values[i] > 21)
-            {   
+            {
                 si2++;
             }
             else
@@ -310,16 +310,17 @@ public class Deck : MonoBehaviour
             finalMessage.text = "EMPATE :|";
             creditos += bet;
             Miscreditos.text = creditos + " creditos:";
-        } 
-        else if(PuntosDealer <= PuntosJuagador)
+        }
+        else if (PuntosDealer <= PuntosJuagador)
         {
             finalMessage.text = "Has hecho mas puntos que la banca, HAS GANADO!!!";
-            creditos += bet;
-            Miscreditos.text = creditos + " creditos:"; 
+            creditos += bet * 2;
+            Miscreditos.text = creditos + " creditos:";
         }
         else
         {
             finalMessage.text = "Has hecho menos puntos que la banca, HAS PERDIDO :(";
+            Miscreditos.text = creditos + " creditos:";
         }
 
 
