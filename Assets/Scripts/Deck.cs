@@ -15,6 +15,12 @@ public class Deck : MonoBehaviour
     public Text probmayor21;
     public Text Puntos;
     public Text MensajePuntosDealer;
+    public Button por10;
+    public Button por100;
+    public Button por1000;
+    public Text Miscreditos;
+    public int creditos;
+    public int bet;
 
     public int[] values = new int[52];
     int cardIndex = 0;
@@ -27,6 +33,8 @@ public class Deck : MonoBehaviour
 
     private void Start()
     {
+        creditos = 1000;
+        Miscreditos.text = creditos + " creditos";
         ShuffleCards();
         StartGame();
     }
@@ -86,21 +94,43 @@ public class Deck : MonoBehaviour
 
     void StartGame()
     {
-        for (int i = 0; i < 2; i++)
-        { 
-            PushPlayer();
-            PushDealer();
-            Puntos.text = player.GetComponent<CardHand>().points.ToString();
-            MensajePuntosDealer.text = "";
+        por10.interactable = true;
+        por100.interactable = true;
+        por1000.interactable = true;
+        hitButton.interactable = false;
+        stickButton.interactable = false;
 
-            /*TODO:
-             * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
-             */
-
-            if (player.GetComponent<CardHand>().points == 21 || dealer.GetComponent<CardHand>().points == 21)
+        if (creditos >= 10)
+        {
+            for (int i = 0; i < 2; i++)
             {
-                Stand();
+                PushPlayer();
+                PushDealer();
+                hitButton.interactable = false;
+                stickButton.interactable = false;
+                Puntos.text = player.GetComponent<CardHand>().points.ToString();
+                MensajePuntosDealer.text = "";
+
+                /*TODO:
+                 * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
+                 */
+
+                if (player.GetComponent<CardHand>().points == 21 || dealer.GetComponent<CardHand>().points == 21)
+                {
+                    Stand();
+                }
+                Miscreditos.text = creditos + " creditos";
             }
+        }
+        else
+        {
+            finalMessage.text = "Te has quedado sin créditos";
+            por10.interactable = false;
+            por100.interactable = false;
+            por1000.interactable = false;
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+            creditos = 1000;
         }
     }
 
@@ -142,7 +172,7 @@ public class Deck : MonoBehaviour
         for (int i = cardIndex; i < values.Length; i++)
         {
             if (PuntosJugador + values[i] > 21)
-            {
+            {   
                 si2++;
             }
             else
@@ -173,6 +203,42 @@ public class Deck : MonoBehaviour
         player.GetComponent<CardHand>().Push(faces[cardIndex], values[cardIndex]/*,cardCopy*/);
         cardIndex++;
         CalculateProbabilities();
+    }
+
+    public void bet10()
+    {
+        bet = 10;
+        creditos -= bet;
+        Miscreditos.text = creditos + " creditos";
+        por10.interactable = false;
+        por100.interactable = false;
+        por1000.interactable = false;
+        hitButton.interactable = true;
+        stickButton.interactable = true;
+    }
+
+    public void bet100()
+    {
+        bet = 100;
+        creditos -= bet;
+        Miscreditos.text = creditos + " creditos";
+        por10.interactable = false;
+        por100.interactable = false;
+        por1000.interactable = false;
+        hitButton.interactable = true;
+        stickButton.interactable = true;
+    }
+
+    public void bet1000()
+    {
+        bet = 1000;
+        creditos -= bet;
+        Miscreditos.text = creditos + " creditos";
+        por10.interactable = false;
+        por100.interactable = false;
+        por1000.interactable = false;
+        hitButton.interactable = true;
+        stickButton.interactable = true;
     }
 
     public void Hit()
@@ -230,18 +296,26 @@ public class Deck : MonoBehaviour
         else if (PuntosJuagador == 21)
         {
             finalMessage.text = "BLACKJACK, HAS GANADO!!!";
+            creditos += bet * 2;
+            Miscreditos.text = creditos + " creditos:";
         }
         else if (PuntosDealer > 21)
         {
             finalMessage.text = "El dealer se ha pasado de puntos, HAS GANADO!!!";
+            creditos += bet * 2;
+            Miscreditos.text = creditos + " creditos:";
         }
         else if (PuntosDealer == PuntosJuagador)
         {
             finalMessage.text = "EMPATE :|";
+            creditos += bet;
+            Miscreditos.text = creditos + " creditos:";
         } 
         else if(PuntosDealer <= PuntosJuagador)
         {
             finalMessage.text = "Has hecho mas puntos que la banca, HAS GANADO!!!";
+            creditos += bet;
+            Miscreditos.text = creditos + " creditos:"; 
         }
         else
         {
